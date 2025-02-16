@@ -1,3 +1,5 @@
+import eventlet
+eventlet.monkey_patch()  # MUSS vor allen anderen Imports stehen!
 from flask import Flask, request, jsonify, Blueprint
 import re
 import logging
