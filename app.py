@@ -1,5 +1,6 @@
-import eventlet
-eventlet.monkey_patch()  # MUSS vor allen anderen Imports stehen!
+from gevent import monkey
+monkey.patch_all()
+
 from flask import Flask, request, jsonify, Blueprint
 import re
 import logging
@@ -41,11 +42,11 @@ init_db()
 
 # Erkennung der Plattform
 PLATFORM_PATTERNS = {
-    "tiktok": r"(https?:\/\/)?(www\.)?tiktok\.com\/",
-    "instagram": r"(https?:\/\/)?(www\.)?instagram\.com\/",
-    "youtube": r"(https?:\/\/)?(www\.)?youtube\.com\/|youtu\.be\/",
-    "facebook": r"(https?:\/\/)?(www\.)?facebook\.com\/",
-    "linkedin": r"(https?:\/\/)?(www\.)?linkedin\.com\/"
+    "tiktok": r"(https?:\\/\\/)?(www\\.)?tiktok\\.com\\/",
+    "instagram": r"(https?:\\/\\/)?(www\\.)?instagram\\.com\\/",
+    "youtube": r"(https?:\\/\\/)?(www\\.)?youtube\\.com\\/|youtu\\.be\\/",
+    "facebook": r"(https?:\\/\\/)?(www\\.)?facebook\\.com\\/",
+    "linkedin": r"(https?:\\/\\/)?(www\\.)?linkedin\\.com\\/"
 }
 
 def detect_platform(url):
@@ -145,6 +146,8 @@ def analyze():
     
     return jsonify({"platform": platform, "type": content_type, "result": result})
 
-if __name__ == '__main__':
+if __name__ == "__main__":
+    from gevent.pywsgi import WSGIServer
     port = int(os.getenv("PORT", 5000))
-    app.run(debug=True, host="0.0.0.0", port=port)
+    http_server = WSGIServer(("0.0.0.0", port), app)
+    http_server.serve_forever()
