@@ -1,0 +1,15 @@
+flask
+flask-socketio
+requests
+bs4
+selenium
+yt-dlp
+moviepy
+pillow
+transformers
+openai
+whisper
+sqlite3
+certifi
+gunicorn
+eventlet
