@@ -9,7 +9,6 @@ pillow
 transformers
 openai
 whisper
-sqlite3
 certifi
 gunicorn
 eventlet
