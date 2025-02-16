@@ -13,3 +13,4 @@ certifi
 gunicorn
 eventlet
 imageio_ffmpeg
+imageio
