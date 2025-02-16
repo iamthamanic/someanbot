@@ -4,7 +4,7 @@ requests
 bs4
 selenium
 yt-dlp
-moviepy
+moviepy<2.0
 pillow
 transformers
 openai
