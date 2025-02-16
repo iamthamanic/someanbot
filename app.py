@@ -115,6 +115,10 @@ def generate_step_by_step(text):
     )
     return response.choices[0].message.content
 
+@app.route('/')
+def home():
+    return "Someanbot API is running!"  # Index-Seite für Render
+
 @app.route('/analyze', methods=['POST'])
 def analyze():
     data = request.json
@@ -126,6 +130,9 @@ def analyze():
     platform = detect_platform(url)
     content_type = detect_content_type(url)
     
+    if platform == "unknown":
+        return jsonify({"error": "Unbekannte Plattform"}), 400
+
     conn = sqlite3.connect("somean.db")
     c = conn.cursor()
     c.execute("SELECT result FROM analyses WHERE url = ?", (url,))
@@ -148,4 +155,5 @@ def analyze():
 
 if __name__ == '__main__':
     port = int(os.getenv("PORT", 5000))
+    logging.info(f"Starting Flask server on port {port}...")
     app.run(debug=True, host="0.0.0.0", port=port)
