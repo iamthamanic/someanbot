@@ -1,7 +1,7 @@
 from gevent import monkey
-monkey.patch_all()
+monkey.patch_all()  # MUSS vor allen anderen Imports stehen!
 
-from flask import Flask, request, jsonify, Blueprint
+from flask import Flask, request, jsonify
 import re
 import logging
 import sqlite3
@@ -28,7 +28,7 @@ app = Flask(__name__)
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # OpenAI Client
-client = OpenAI(api_key="DEIN_API_KEY")
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))  # Nutzt eine Umgebungsvariable statt einem harten API-Key
 
 # Datenbank initialisieren
 def init_db():
@@ -146,8 +146,6 @@ def analyze():
     
     return jsonify({"platform": platform, "type": content_type, "result": result})
 
-if __name__ == "__main__":
-    from gevent.pywsgi import WSGIServer
+if __name__ == '__main__':
     port = int(os.getenv("PORT", 5000))
-    http_server = WSGIServer(("0.0.0.0", port), app)
-    http_server.serve_forever()
+    app.run(debug=True, host="0.0.0.0", port=port)
